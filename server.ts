@@ -4,6 +4,7 @@ import { createServer as createViteServer } from 'vite';
 import crypto from 'crypto';
 import os from 'os';
 import path from 'path';
+import fs from 'fs';
 
 const app = express();
 const PORT = process.env.NODE_ENV === 'production' && process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
@@ -1078,18 +1079,26 @@ app.get('/api/events/stream', (req: Request, res: Response) => {
 
 // Mount Vite in development or serve static in production
 async function startServer() {
-  if (process.env.NODE_ENV !== 'production') {
+  const distPath = path.resolve(process.cwd(), 'dist');
+  const indexPath = path.resolve(distPath, 'index.html');
+
+  if (process.env.NODE_ENV === 'production' && fs.existsSync(indexPath)) {
+    app.use(express.static(distPath));
+    app.get('*', (req, res) => {
+      res.sendFile(indexPath, (err) => {
+        if (err && !res.headersSent) {
+          res.status(500).send('Error loading dashboard');
+        }
+      });
+    });
+  } else {
+    // If running in development OR if dist hasn't been pre-built yet in production,
+    // seamlessly fall back to Vite middleware mode so the app never crashes with ENOENT!
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
     });
     app.use(vite.middlewares);
-  } else {
-    const distPath = path.resolve(process.cwd(), 'dist');
-    app.use(express.static(distPath));
-    app.get('*', (req, res) => {
-      res.sendFile(path.resolve(distPath, 'index.html'));
-    });
   }
 
   app.listen(PORT, '0.0.0.0', () => {
