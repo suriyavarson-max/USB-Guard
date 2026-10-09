@@ -1,0 +1,6 @@
+{
+  "name": "USB Device Security Monitoring and Threat Detection System",
+  "description": "Cross-platform defensive cybersecurity monitoring, USB device authorization, SHA-256 file integrity verification, audit log hash chaining, and incident threat detection for Windows, Linux, and macOS.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

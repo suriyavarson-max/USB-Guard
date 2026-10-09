@@ -1,0 +1,3 @@
+# Platform-specific requirements for Linux
+-r requirements.txt
+pyudev>=0.24.0

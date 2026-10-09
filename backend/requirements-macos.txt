@@ -1,0 +1,5 @@
+# Platform-specific requirements for macOS
+-r requirements.txt
+pyobjc-core>=10.1
+pyobjc-framework-IOKit>=10.1
+pyobjc-framework-DiskArbitration>=10.1

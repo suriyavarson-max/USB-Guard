@@ -1,0 +1,4 @@
+# Platform-specific requirements for Windows
+-r requirements.txt
+pywin32>=306
+WMI>=1.5.1
